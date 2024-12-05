@@ -85,6 +85,7 @@ pyenv activate glm4voice_env
 **模型下载** 
 
 国内 huggingface 太慢，用 modelscope 下载
+
 安装 modelscope 
 ```
 pip install modelscope 
