@@ -82,9 +82,18 @@ pyenv activate glm4voice_env
 ## 安装GLM4Voice 
 
 **模型下载** 
-```bash
-# 国内 huggingface 太慢，用 modelscope 下载
 
+国内 huggingface 太慢，用 modelscope 下载
+安装 modelscope 
+```
+pip install modelscope 
+```
+下载模型 
+```python 
+from modelscope import snapshot_download
+snapshot_download('ZhipuAI/glm-4-voice-9b')
+snapshot_download('ZhipuAI/glm-4-voice-tokenizer')
+snapshot_download('ZhipuAI/glm-4-voice-decoder')
 ```
 
 **安装依赖包** 
@@ -92,9 +101,9 @@ pyenv activate glm4voice_env
 # 一般pip源不包含torch的cuda细分版本，建议从 pytorch 官网下载  
 # 到 https://download.pytorch.org/whl/cu118/torch，手动下载 torch-2.3.0+cu118-cp311-cp311-linux_x86_64.whl
 pip install torch-2.3.0+cu118-cp311-cp311-linux_x86_64.whl
-pip install torchaudio==2.3.0+cu118 --index-url https://download.pytorch.org/whl/cu118 -c constraint.txt
+pip install torchaudio==2.3.0+cu118 --index-url https://download.pytorch.org/whl/cu118
 # 到 https://download.pytorch.org/whl/cu118/torchvision，手动下载 torchvision-0.18.0+cu118-cp311-cp311-linux_x86_64.whl
-pip install torchvision-0.18.0+cu118-cp311-cp311-linux_x86_64.whl -c constraint.txt
+pip install torchvision-0.18.0+cu118-cp311-cp311-linux_x86_64.whl
 ```
 
 创建 constraint.txt，写入
@@ -112,8 +121,11 @@ torchvision==0.18.0+cu118
 pip install vllm-0.5.1+cu118-cp311-cp311-manylinux1_x86_64.whl -c constraint.txt
 ```
 
-**注意: torch, torchaudio, torchvision 和 vllm 的版本必须匹配 cuda 版本和 python 版本。具体匹配关系可以问ChatGPT**
+**注意**: 
+1. torch, torchaudio, torchvision 和 vllm 的版本必须匹配 cuda 版本和 python 版本。具体匹配关系可以问ChatGPT
+2. 安装 vllm 和下面 requirements 时加上 -c contraints.txt 约束，否则 torch 会被替换，导致和 cuda 不兼容 
 
+安装glm4voice依赖 
 ```bash
 git clone --recurse-submodules https://github.com/THUDM/GLM-4-Voice
 cd GLM-4-Voice
@@ -122,8 +134,9 @@ pip install -r requirements.txt -c constraints.txt
 
 ## 启动服务 
 
-到 glm4voice 的dev分支下载 vllm_model_server.py 
+这里用 vllm 加速版 
 
+到 glm4voice的dev分支下载 vllm_model_server.py 
 ```
 python vllm_model_server.py --host localhost --model-path <glm-4-voice-9b的path> --port 10000 --dtype bfloat16 --device cuda:0
 ```
