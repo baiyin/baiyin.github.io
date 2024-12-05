@@ -186,8 +186,8 @@ pip install vllm-0.5.1+cu118-cp311-cp311-manylinux1_x86_64.whl -c constraints.tx
 
 **注意**:
 
-1. vllm 的版本必须和系统 cuda 和 python 版本匹配。具体匹配关系问 ChatGPT 或 Google 
-2. 安装 vllm 要加 -c contraints.txt 约束，否则 torch 会被替换，导致和 cuda 不兼容
+1. vllm 的版本必须和系统 cuda 和 python 版本匹配。具体匹配关系问 ChatGPT 或 Google，或参考 https://docs.vllm.ai/en/latest/getting_started/installation.html
+3. 安装 vllm 必须加 -c contraints.txt 约束，否则 torch 会被覆盖，导致和 cuda 不兼容
 
 安装glm4voice依赖
 
