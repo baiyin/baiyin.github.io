@@ -3,7 +3,7 @@
 ## 系统配置
 
 ```
-OS: Ubuntu 20.04.5 LTS (Focal Fossa)
+OS: Ubuntu 20.04.5 LTS
 GPU: A100-SXM-80G * 1
 CUDA: 11.8  驱动版本: 470.129.06
 ```
@@ -28,8 +28,8 @@ vllm: 5.0.1
 **安装pyenv**
 
 ```bash
-git clone <https://github.com/pyenv/pyenv.git> ~/.pyenv
-git clone <https://github.com/pyenv/pyenv-virtualenv.git> ~/.pyenv/plugins/pyenv-virtualenv
+git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+git clone https://github.com/pyenv/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
 ```
 
 编辑 ~/.bashrc，尾部添加 pyenv 配置
@@ -59,28 +59,28 @@ pyenv
 ```bash
 # 安装 python 依赖的系统包
 sudo apt update
-sudo apt install -y \\
-    build-essential \\
-    libssl-dev \\
-    zlib1g-dev \\
-    libbz2-dev \\
-    libreadline-dev \\
-    libsqlite3-dev \\
-    wget \\
-    curl \\
-    llvm \\
-    libncursesw5-dev \\
-    xz-utils \\
-    tk-dev \\
-    libxml2-dev \\
-    libxmlsec1-dev \\
-    libffi-dev \\
-    liblzma-dev \\
+sudo apt install -y \
+    build-essential \
+    libssl-dev \
+    zlib1g-dev \
+    libbz2-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    wget \
+    curl \
+    llvm \
+    libncursesw5-dev \
+    xz-utils \
+    tk-dev \
+    libxml2-dev \
+    libxmlsec1-dev \
+    libffi-dev \
+    liblzma-dev \
     git
 # 开始安装 python
 export v=3.11.10
 # 用国内镜像地址
-wget <https://npmmirror.com/mirrors/python/$v/Python-$v.tar.xz> -P ~/.pyenv/cache/
+wget https://npmmirror.com/mirrors/python/$v/Python-$v.tar.xz -P ~/.pyenv/cache/
 pyenv install $v
 # 验证
 pyenv versions # 提示 3.11.10 则表示安装成功
@@ -112,9 +112,6 @@ pip install modelscope
 下载模型
 
 ```python
-import os
-# 设置 MODELSCOPE_CACHE 环境变量
-os.environ["MODELSCOPE_CACHE"] = "/vepfs/baiyin/.cache/modelscope"
 from modelscope import snapshot_download
 
 snapshot_download('ZhipuAI/glm-4-voice-9b')
@@ -219,12 +216,5 @@ sudo apt install ffmpeg
 # glm-4-voice-9b 在 modelscope 指定的目录下 
 python vllm_model_server.py --host localhost --model-path /path/to/the/glm-4-voice-9b --port 10000 --dtype bfloat16 --device cuda:0
 
-# 比如在我们服务器上 python vllm_model_server.py --host localhost --model-path /vepfs/baiyin/.cache/modelscope/hub/ZhipuAI/glm-4-voice-9b --port 10002 --dtype bfloat16 --device cuda:0
-
 python web_demo.py --tokenizer-path /path/to/the/glm-4-voice-tokenizer --model-path /path/to/the/glm-4-voice-9b --flow-path /path/to/the/glm-4-voice-decoder 
-
-# 启动 web demo 
-# 需要把 web_demo 中端口改成 model_server 中实际使用的端口
-# python web_demo.py --tokenizer-path /vepfs/baiyin/.cache/modelscope/hub/ZhipuAI/glm-4-voice-tokenizer --model-path /vepfs/baiyin/.cache/modelscope/hub/ZhipuAI/glm-4-voice-9b --flow-path /vepfs/baiyin/.cache/modelscope/hub/ZhipuAI/glm-4-voice-decoder 
-
 ```
