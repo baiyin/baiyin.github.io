@@ -19,21 +19,28 @@ torch: 2.3.0+cu118
 ```bash
 git clone https://github.com/pyenv/pyenv.git ~/.pyenv
 git clone https://github.com/pyenv/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
-# 编辑 ~/.bashrc，配置 pyenv 配置，保存退出
-  export PYENV_ROOT="~/.pyenv"
-  export PATH="$PYENV_ROOT/bin:$PATH"
-  eval "$(pyenv init --path)"
-  eval "$(pyenv init -)"
-  eval "$(pyenv virtualenv-init -)"
-# 保存退出 ~/.bashrc
-source ~/.bashrc 
-# pyenv 测试 
+```
+
+编辑 ~/.bashrc，尾部添加 pyenv 配置 
+```log
+export PYENV_ROOT="~/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init --path)"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+```
+保存退出 ~/.bashrc
+```bash
+source ~/.bashrc
+```
+pyenv 测试 
+```bash
 pyenv 
 ```
 
 **安装 Python**
 ```bash
-# 需要先把安装 python 所需要的系统包给安装上 
+# 安装 python 依赖的系统包 
 sudo apt update 
 sudo apt install -y \
     build-essential \
