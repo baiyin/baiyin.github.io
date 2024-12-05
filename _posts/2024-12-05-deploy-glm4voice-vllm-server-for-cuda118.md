@@ -34,7 +34,7 @@ git clone https://github.com/pyenv/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-v
 
 编辑 ~/.bashrc，尾部添加 pyenv 配置
 
-```
+```bash
 export PYENV_ROOT="~/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init --path)"
@@ -105,7 +105,7 @@ pyenv activate glm4voice_env
 
 安装 modelscope
 
-```
+```bash
 pip install modelscope
 ```
 
@@ -123,7 +123,7 @@ snapshot_download('ZhipuAI/glm-4-voice-decoder')
 
 安装 torch, torchaudio, torchvision, xformers 
 
-```
+```bash
 # 安装 torch 
 # 一般pip源不包含torch的cuda细分版本，建议从 pytorch 官网下载
 # 到 https://download.pytorch.org/whl/cu118/torch 手动下载 torch-2.3.0+cu118-cp311-cp311-linux_x86_64.whl
@@ -167,7 +167,7 @@ python -m xformers.info
 
 新建constraints.txt，写入
 
-```
+```bash
 torch==2.3.0+cu118
 torchaudio==2.3.0+cu118
 torchvision==0.18.0+cu118
@@ -178,7 +178,7 @@ xformers==0.0.26.post1+cu118
 
 安装 vllm
 
-```
+```bash
 # 手动下载 vllm-0.5.1+cu118-cp311-cp311-manylinux1_x86_64.whl
 # 下载地址 https://github.com/vllm-project/vllm/releases/download/v0.5.1/vllm-0.5.1+cu118-cp311-cp311-manylinux1_x86_64.whl
 pip install vllm-0.5.1+cu118-cp311-cp311-manylinux1_x86_64.whl -c constraints.txt
@@ -212,7 +212,7 @@ sudo apt install ffmpeg
 1. 到 github [glm4voice 的 dev分支](https://github.com/THUDM/GLM-4-Voice/tree/dev)下载 vllm_model_server.py
 2. 启动服务 
 
-```
+```bash
 # glm-4-voice-9b 在 modelscope 指定的目录下 
 python vllm_model_server.py --host localhost --model-path /path/to/the/glm-4-voice-9b --port 10000 --dtype bfloat16 --device cuda:0
 
