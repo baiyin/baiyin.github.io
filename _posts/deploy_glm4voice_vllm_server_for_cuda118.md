@@ -1,78 +1,95 @@
+# 完整版
 
 ## 系统配置
 
 ```
 OS: Ubuntu 20.04.5 LTS (Focal Fossa)
 GPU: A100-SXM-80G * 1
-CUDA: 11.8  驱动版本: 470.129.06 
+CUDA: 11.8  驱动版本: 470.129.06
 ```
 
-最终版本 
+最终版本
+
 ```
-Python: 3.11.10 
+Python: 3.11.10
 torch: 2.3.0+cu118
 vllm: 5.0.1
 ```
 
-## 搭建基础环境 
+安装过程挑战点
+
+1. 系统 CUDA 版本 11.8 且不能升级，需要让 glm4voice 适配 cuda118 版本。
+2. 当前 python 包默认支持 CUDA 版一般 12 以上，和 11.8 不兼容。**需要** 安装和 cuda11.8 对应的版本，小版本号也要对应。
+3. 官方给出的 vllm for cuda11.8 安装示例有问题 
+4. 安装 python 包依赖过程中容易替换掉前面已经安装的版本，需要注意安装顺序和约束 
+
+## 搭建基础环境
 
 **安装pyenv**
+
 ```bash
-git clone https://github.com/pyenv/pyenv.git ~/.pyenv
-git clone https://github.com/pyenv/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
+git clone <https://github.com/pyenv/pyenv.git> ~/.pyenv
+git clone <https://github.com/pyenv/pyenv-virtualenv.git> ~/.pyenv/plugins/pyenv-virtualenv
 ```
 
-编辑 ~/.bashrc，尾部添加 pyenv 配置 
-```log
+编辑 ~/.bashrc，尾部添加 pyenv 配置
+
+```
 export PYENV_ROOT="~/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init --path)"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 ```
+
 保存退出 ~/.bashrc
+
 ```bash
 source ~/.bashrc
 ```
-pyenv 测试 
+
+pyenv 测试
+
 ```bash
-pyenv 
+pyenv
 ```
 
 **安装 Python**
+
 ```bash
-# 安装 python 依赖的系统包 
-sudo apt update 
-sudo apt install -y \
-    build-essential \
-    libssl-dev \
-    zlib1g-dev \
-    libbz2-dev \
-    libreadline-dev \
-    libsqlite3-dev \
-    wget \
-    curl \
-    llvm \
-    libncursesw5-dev \
-    xz-utils \
-    tk-dev \
-    libxml2-dev \
-    libxmlsec1-dev \
-    libffi-dev \
-    liblzma-dev \
+# 安装 python 依赖的系统包
+sudo apt update
+sudo apt install -y \\
+    build-essential \\
+    libssl-dev \\
+    zlib1g-dev \\
+    libbz2-dev \\
+    libreadline-dev \\
+    libsqlite3-dev \\
+    wget \\
+    curl \\
+    llvm \\
+    libncursesw5-dev \\
+    xz-utils \\
+    tk-dev \\
+    libxml2-dev \\
+    libxmlsec1-dev \\
+    libffi-dev \\
+    liblzma-dev \\
     git
-# 开始安装 python 
-export v=3.11.10 
+# 开始安装 python
+export v=3.11.10
 # 用国内镜像地址
-wget https://npmmirror.com/mirrors/python/$v/Python-$v.tar.xz -P ~/.pyenv/cache/
-pyenv install $v 
-# 验证 
-pyenv versions # 提示 3.11.10 则表示安装成功 
+wget <https://npmmirror.com/mirrors/python/$v/Python-$v.tar.xz> -P ~/.pyenv/cache/
+pyenv install $v
+# 验证
+pyenv versions # 提示 3.11.10 则表示安装成功
 # 设置全局 Python 版本
 pyenv global 3.11.10
 ```
 
-**创建虚拟环境** 
+**创建虚拟环境**
+
 ```bash
 # 创建虚拟环境
 pyenv virtualenv 3.11.10 glm4voice_env
@@ -80,72 +97,134 @@ pyenv virtualenv 3.11.10 glm4voice_env
 pyenv activate glm4voice_env
 ```
 
-## 安装GLM4Voice 
+## 安装GLM4Voice
 
-**模型下载** 
+**模型下载**
 
 国内 huggingface 太慢，用 modelscope 下载
 
-安装 modelscope 
+安装 modelscope
+
 ```
-pip install modelscope 
+pip install modelscope
 ```
-下载模型 
-```python 
+
+下载模型
+
+```python
+import os
+# 设置 MODELSCOPE_CACHE 环境变量
+os.environ["MODELSCOPE_CACHE"] = "/vepfs/baiyin/.cache/modelscope"
 from modelscope import snapshot_download
+
 snapshot_download('ZhipuAI/glm-4-voice-9b')
 snapshot_download('ZhipuAI/glm-4-voice-tokenizer')
 snapshot_download('ZhipuAI/glm-4-voice-decoder')
 ```
 
-**安装依赖包** 
+**安装依赖包**
+
+安装 torch, torchaudio, torchvision, xformers 
+
 ```
-# 一般pip源不包含torch的cuda细分版本，建议从 pytorch 官网下载  
-# 到 https://download.pytorch.org/whl/cu118/torch，手动下载 torch-2.3.0+cu118-cp311-cp311-linux_x86_64.whl
+# 安装 torch 
+# 一般pip源不包含torch的cuda细分版本，建议从 pytorch 官网下载
+# 到 https://download.pytorch.org/whl/cu118/torch 手动下载 torch-2.3.0+cu118-cp311-cp311-linux_x86_64.whl
 pip install torch-2.3.0+cu118-cp311-cp311-linux_x86_64.whl
+
+# 安装 torchaudio 
 pip install torchaudio==2.3.0+cu118 --index-url https://download.pytorch.org/whl/cu118
-# 到 https://download.pytorch.org/whl/cu118/torchvision，手动下载 torchvision-0.18.0+cu118-cp311-cp311-linux_x86_64.whl
+
+# 安装 torchvision 
+# 到 https://download.pytorch.org/whl/cu118/torchvision 手动下载 torchvision-0.18.0+cu118-cp311-cp311-linux_x86_64.whl
 pip install torchvision-0.18.0+cu118-cp311-cp311-linux_x86_64.whl
+
+# 安装 xformers 
+# 到 https://download.pytorch.org/whl/cu118/xformers 手动下载 xformers-0.0.26.post1+cu118-cp311-cp311-manylinux2014_x86_64.whl 
+pip install xformers-0.0.26.post1+cu118-cp311-cp311-manylinux2014_x86_64.whl 
 ```
 
-新建constraint.txt，写入
-```log
+测试
+
+```bash
+# python 测试 torch 
+>>> import torch
+>>> import torchaudio
+>>> import torchvision
+>>> print("CUDA Available:", torch.cuda.is_available())
+# True 表示安装成功 
+```
+
+```bash
+# shell 测试 xformers 
+python -m xformers.info
+# 输出中包含
+# pytorch.cuda: available 
+# 则说明成功安装 cuda 版本 xformers 
+```
+
+**注意**
+
+1. torch, torchaudio, torchvision, xformers 版本必须和 cuda 版本和 python 版本匹配。具体匹配关系问 ChatGPT 或 Google 
+2. xformers 需要单独安装，否则通过 vllm 依赖安装的版本不支持 cuda 
+
+新建constraints.txt，写入
+
+```
 torch==2.3.0+cu118
 torchaudio==2.3.0+cu118
 torchvision==0.18.0+cu118
+xformers==0.0.26.post1+cu118
 ```
+
 保存退出
 
-安装 vllm 
+安装 vllm
+
 ```
 # 手动下载 vllm-0.5.1+cu118-cp311-cp311-manylinux1_x86_64.whl
-# 下载地址 https://github.com/vllm-project/vllm/releases/download/vllm-0.5.1+cu118-cp311-cp311-manylinux1_x86_64.whl
-pip install vllm-0.5.1+cu118-cp311-cp311-manylinux1_x86_64.whl -c constraint.txt
+# 下载地址 https://github.com/vllm-project/vllm/releases/download/v0.5.1/vllm-0.5.1+cu118-cp311-cp311-manylinux1_x86_64.whl
+pip install vllm-0.5.1+cu118-cp311-cp311-manylinux1_x86_64.whl -c constraints.txt
 ```
 
-**注意**: 
-1. torch, torchaudio, torchvision 和 vllm 的版本必须匹配 cuda 版本和 python 版本。具体匹配关系可以问ChatGPT
-2. 安装 vllm 和下面 requirements 时加上 -c contraints.txt 约束，否则 torch 会被替换，导致和 cuda 不兼容 
+**注意**:
 
-安装glm4voice依赖 
+1. vllm 的版本必须和系统 cuda 和 python 版本匹配。具体匹配关系问 ChatGPT 或 Google 
+2. 安装 vllm 要加 -c contraints.txt 约束，否则 torch 会被替换，导致和 cuda 不兼容
+
+安装glm4voice依赖
+
 ```bash
 git clone --recurse-submodules https://github.com/THUDM/GLM-4-Voice
 cd GLM-4-Voice
-pip install -r requirements.txt -c constraints.txt
+pip install -r requirements.txt -c ../constraints.txt
 
-# 安装剩余依赖 
-pip install accelerate 
-sudo apt install ffmpeg 
+# 安装剩余依赖
+pip install accelerate
+sudo apt install ffmpeg
 ```
 
-## 启动服务 
+**注意**
 
-这里用 vllm 加速版 
+1. 安装 requirements 要加 -c contraints.txt 约束，否则 torch 会被替换导致和 cuda 不兼容
 
-到 glm4voice的dev分支下载 vllm_model_server.py 
+## 启动服务
+
+这里用 vllm 加速版
+
+1. 到 github [glm4voice 的 dev分支](https://github.com/THUDM/GLM-4-Voice/tree/dev)下载 vllm_model_server.py
+2. 启动服务 
+
 ```
-python vllm_model_server.py --host localhost --model-path <存放glm-4-voice-9b的path> --port 10000 --dtype bfloat16 --device cuda:0
+# glm-4-voice-9b 在 modelscope 指定的目录下 
+python vllm_model_server.py --host localhost --model-path /path/to/the/glm-4-voice-9b --port 10000 --dtype bfloat16 --device cuda:0
+
+# 比如在我们服务器上 python vllm_model_server.py --host localhost --model-path /vepfs/baiyin/.cache/modelscope/hub/ZhipuAI/glm-4-voice-9b --port 10002 --dtype bfloat16 --device cuda:0
+
+python web_demo.py --tokenizer-path /path/to/the/glm-4-voice-tokenizer --model-path /path/to/the/glm-4-voice-9b --flow-path /path/to/the/glm-4-voice-decoder 
+
+# 启动 web demo 
+# 需要把 web_demo 中端口改成 model_server 中实际使用的端口
+# python web_demo.py --tokenizer-path /vepfs/baiyin/.cache/modelscope/hub/ZhipuAI/glm-4-voice-tokenizer --model-path /vepfs/baiyin/.cache/modelscope/hub/ZhipuAI/glm-4-voice-9b --flow-path /vepfs/baiyin/.cache/modelscope/hub/ZhipuAI/glm-4-voice-decoder 
+
 ```
-
-
-
