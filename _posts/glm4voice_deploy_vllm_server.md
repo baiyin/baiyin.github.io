@@ -85,15 +85,21 @@ pyenv activate glm4voice_env
 # 一般pip源不包含torch的cuda细分版本，建议从 pytorch 官网下载  
 # 到 https://download.pytorch.org/whl/cu118/torch，手动下载 torch-2.3.0+cu118-cp311-cp311-linux_x86_64.whl
 pip install torch-2.3.0+cu118-cp311-cp311-linux_x86_64.whl
-# 创建 constraint.txt
-# 写入 torch==2.3.0+cu118 保存退出
 pip install torchaudio==2.3.0+cu118 --index-url https://download.pytorch.org/whl/cu118 -c constraint.txt
-# 在 constraint.txt 中添加
-# torchaudio==2.3.0+cu118 保存退出 
 # 到 https://download.pytorch.org/whl/cu118/torchvision，手动下载 torchvision-0.18.0+cu118-cp311-cp311-linux_x86_64.whl
 pip install torchvision-0.18.0+cu118-cp311-cp311-linux_x86_64.whl -c constraint.txt
-# 在 constraint.txt 中添加 
-# torchvision==0.18.0+cu118 保存退出 
+```
+
+创建 constraint.txt，写入
+```log
+torch==2.3.0+cu118
+torchaudio==2.3.0+cu118
+torchvision==0.18.0+cu118
+```
+保存退出
+
+安装 vllm 
+```
 # 手动下载 vllm-0.5.1+cu118-cp311-cp311-manylinux1_x86_64.whl
 # 下载地址 https://github.com/vllm-project/vllm/releases/download/vllm-0.5.1+cu118-cp311-cp311-manylinux1_x86_64.whl
 pip install vllm-0.5.1+cu118-cp311-cp311-manylinux1_x86_64.whl -c constraint.txt
