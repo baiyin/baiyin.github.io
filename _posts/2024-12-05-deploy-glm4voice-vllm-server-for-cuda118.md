@@ -163,7 +163,7 @@ python -m xformers.info
 **注意**
 
 1. torch, torchaudio, torchvision, xformers 版本必须和 cuda 版本和 python 版本匹配。具体匹配关系问 ChatGPT 或 Google 
-2. xformers 需要单独安装，否则通过 vllm 依赖安装的版本不支持 cuda 
+2. xformers 需要单独安装。通过 vllm 依赖自动安装的 xformers 版本不支持 cuda 
 
 新建constraints.txt，写入
 
