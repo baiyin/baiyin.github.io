@@ -1,5 +1,5 @@
 
-基础环境 
+### 系统配置
 
 ```
 OS: Ubuntu 20.04.5 LTS (Focal Fossa)
@@ -13,10 +13,10 @@ Python: 3.11.10
 torch: 2.3.0+cu118
 ```
 
-## 创建步骤
+## 搭建基础环境 
 
-安装pyenv 
-```
+**安装pyenv**
+```bash
 git clone https://github.com/pyenv/pyenv.git ~/.pyenv
 git clone https://github.com/pyenv/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
 # 编辑 ~/.bashrc，配置 pyenv 配置，保存退出
@@ -31,8 +31,8 @@ source ~/.bashrc
 pyenv 
 ```
 
-## 安装 Python 
-```
+**安装 Python**
+```bash
 # 需要先把安装 python 所需要的系统包给安装上 
 sudo apt update 
 sudo apt install -y \
@@ -53,7 +53,6 @@ sudo apt install -y \
     libffi-dev \
     liblzma-dev \
     git
-
 # 开始安装 python 
 export v=3.11.10 
 # 用国内镜像地址
@@ -65,22 +64,23 @@ pyenv versions # 提示 3.11.10 则表示安装成功
 pyenv global 3.11.10
 ```
 
-## 创建虚拟环境 
-```
+**创建虚拟环境** 
+```bash
 # 创建虚拟环境
 pyenv virtualenv 3.11.10 glm4voice_env
 # 激活虚拟环境
 pyenv activate glm4voice_env
 ```
 
-## 安装
-模型下载 
-```
+## 安装GLM4Voice 
+
+**模型下载** 
+```bash
 # 国内 huggingface 太慢，用 modelscope 下载
 
 ```
 
-安装依赖包
+**安装依赖包** 
 ```
 # 一般pip源不包含torch的cuda细分版本，建议从 pytorch 官网下载  
 # 到 https://download.pytorch.org/whl/cu118/torch，手动下载 torch-2.3.0+cu118-cp311-cp311-linux_x86_64.whl
@@ -101,7 +101,9 @@ pip install vllm-0.5.1+cu118-cp311-cp311-manylinux1_x86_64.whl -c constraint.txt
 
 **注意: torch, torchaudio, torchvision 和 vllm 的版本必须匹配 cuda 版本和 python 版本。具体匹配关系可以问ChatGPT**
 
-```
+```bash
+git clone --recurse-submodules https://github.com/THUDM/GLM-4-Voice
+cd GLM-4-Voice
 pip install -r requirements.txt -c constraints.txt
 ```
 
