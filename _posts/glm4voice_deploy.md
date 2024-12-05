@@ -1,5 +1,4 @@
 
-
 基础环境 
 
 ```
@@ -33,6 +32,7 @@ pyenv
 ```
 
 ## 安装 Python 
+```
 # 需要先把安装 python 所需要的系统包给安装上 
 sudo apt update 
 sudo apt install -y \
@@ -63,10 +63,19 @@ pyenv install $v
 pyenv versions 
 # 设置全局 Python 版本
 pyenv global 3.11.10
+```
 
 ## 创建虚拟环境 
+```
 pyenv virtualenv 3.11.10 glm4voice_env 
-pyenv activate glm4voice_env  
+pyenv activate glm4voice_env
+```
+
+## 安装
+```
+
+```
+
 
 
 
