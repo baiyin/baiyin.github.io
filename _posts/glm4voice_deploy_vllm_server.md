@@ -1,5 +1,5 @@
 
-### 系统配置
+## 系统配置
 
 ```
 OS: Ubuntu 20.04.5 LTS (Focal Fossa)
@@ -107,7 +107,7 @@ pip install torchaudio==2.3.0+cu118 --index-url https://download.pytorch.org/whl
 pip install torchvision-0.18.0+cu118-cp311-cp311-linux_x86_64.whl
 ```
 
-创建 constraint.txt，写入
+新建constraint.txt，写入
 ```log
 torch==2.3.0+cu118
 torchaudio==2.3.0+cu118
@@ -131,6 +131,10 @@ pip install vllm-0.5.1+cu118-cp311-cp311-manylinux1_x86_64.whl -c constraint.txt
 git clone --recurse-submodules https://github.com/THUDM/GLM-4-Voice
 cd GLM-4-Voice
 pip install -r requirements.txt -c constraints.txt
+
+# 安装剩余依赖 
+pip install accelerate 
+sudo apt install ffmpeg 
 ```
 
 ## 启动服务 
@@ -139,9 +143,8 @@ pip install -r requirements.txt -c constraints.txt
 
 到 glm4voice的dev分支下载 vllm_model_server.py 
 ```
-python vllm_model_server.py --host localhost --model-path <glm-4-voice-9b的path> --port 10000 --dtype bfloat16 --device cuda:0
+python vllm_model_server.py --host localhost --model-path <存放glm-4-voice-9b的path> --port 10000 --dtype bfloat16 --device cuda:0
 ```
-
 
 
 
