@@ -21,7 +21,7 @@ docker compose -f docker/docker-compose.yml up -d
 Note: The initial startup may take several minutes, depending on the image size, network speed, and host performance.
 After finished, open http://127.0.0.1 in your browser and check if the RagFlow login page loads successfully.
 
-4. Troubleshoot Issue 1: Registration and login are unresponsive
+** Troubleshoot Issue 1**: Registration and login are unresponsive
 
 Check the logs of the ragflow-server container:
 ```shell
@@ -43,7 +43,7 @@ docker restart ragflow-server
 ```
 Retested registration and login functionality, and found it is now OK. 
 
-5. Troubleshoot Issue 2: Errors related to Elasticsearch (ES01) missing during chat
+**Troubleshoot Issue 2**: Errors related to Elasticsearch (ES01) missing during chat
 
 Occured the following error while chatting
 ```
