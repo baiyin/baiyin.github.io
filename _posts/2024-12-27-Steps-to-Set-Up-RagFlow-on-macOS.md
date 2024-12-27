@@ -1,12 +1,11 @@
 My macOS setup is Apple M3 Max with 128 GB of RAM.
 
-1. Clone the repository and navigate to the directory
+## Step 1. Clone the repository and navigate to the directory
 ```shell
 git clone https://github.com/infiniflow/ragflow.git
 cd ragflow
 ```
-2. Configure the .env file
-
+## Step 2. Configure the .env file
 Edit the docker/.env file:
 ```shell
 vi docker/.env
@@ -14,8 +13,7 @@ Configure as needed:
 # Set the RAGFLOW_IMAGE to use a domestic (China) mirror if required.
 # If you are using macOS, uncomment the line MACOS=1.
 ```
-
-3. Start the services
+## Step 3. Start the services
 ```shell
 docker compose -f docker/docker-compose.yml up -d
 ```
