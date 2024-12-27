@@ -14,6 +14,7 @@ Configure as needed:
 # Set the RAGFLOW_IMAGE to use a domestic (China) mirror if required.
 # If you are using macOS, uncomment the line MACOS=1.
 ```
+
 3. Start the services
 ```shell
 docker compose -f docker/docker-compose.yml up -d
