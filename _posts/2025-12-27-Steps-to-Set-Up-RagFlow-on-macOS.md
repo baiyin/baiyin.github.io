@@ -32,13 +32,19 @@ Note: The initial startup may take several minutes, depending on the image size,
 - Open http://127.0.0.1 in your browser and check if the RagFlow login page loads successfully.
 
 5. Troubleshoot Issue 1: Registration and login are unresponsive
-- Check the logs of the ragflow-server container:
+Check the logs of the ragflow-server container:
 ```shell
 docker logs -f ragflow-server
 ```
-- If you encounter a ModuleNotFoundError indicating that polars is missing:
-- Enter the container and install polars-lts-cpu:
+Found the following error:
+```shell
+The following required CPU features were not detected:
+    avx, avx2, fma, bmi1, bmi2, lzcnt, movbe
+Continuing to use this version of Polars on this processor will likely result in a crash.
+Install the `polars-lts-cpu` package instead of `polars` to run Polars with better compatibility.
+```
 
+Enter the container and install polars-lts-cpu:
 ```shell
 docker exec -it ragflow-server /bin/bash
 pip install polars-lts-cpu
@@ -49,18 +55,24 @@ docker restart ragflow-server
 
 6. Troubleshoot Issue 2: Errors related to Elasticsearch (ES01) missing during chat
 
+Occured the following error while chatting
+```
+elastic_transport.ConnectionError: Connection error caused by: ConnectionError(Connection error caused by: NameResolutionError(<urllib3.connection.HTTPConnection object at 0x7ffeb1b840d0>: Failed to resolve 'es01' ([Errno -2] Name or service not known)))
+2024-12-27 17:36:09,188 INFO     27 172.18.0.6 - - [27/Dec/2024 17:36:09] "POST /v1/conversation/completion HTTP/1.1" 200 -
+2024-12-27 17:36:23,906 INFO     28 task_consumer_0 reported heartbeat: {"name": "task_consumer_0", "now": "2024-12-27T17:36:23.903+08:00", "boot_at": "2024-12-27T17:27:57.772+08:00", "pending": 0, "lag": 0, "done": 1, "failed": 0, "current": null}
+```
+
 - Check the status of the ragflow-es-01 container:
 ```shell
 docker ps
 docker logs -f ragflow-es-01
 ```
-- the container is exiting due to insufficient memory (Exit Code 137):
+the container is exiting due to insufficient memory (Exit Code 137):
 Open Docker Desktop Settings:
 - Increase the memory allocation to 16GB (at least 4GB minimum).
 - Restart all RagFlow-related services.
 
 7. Verify if the services are functioning correctly
-
 - Check the logs for both ragflow-server and ragflow-es-01 containers to ensure there are no errors:
 ```shell
 docker logs -f ragflow-server
@@ -72,4 +84,4 @@ Test the following in your browser:
 - Uploading data
 - Chat functionality
 
-This translation maintains all technical details and provides a clear, step-by-step guide in English. Let me know if you need further adjustments!
+Everything is working fine.
