@@ -51,7 +51,7 @@ pip install polars-lts-cpu
 exit
 docker restart ragflow-server
 ```
-- Retest registration and login functionality.
+Retested registration and login functionality, and found it is now OK. 
 
 6. Troubleshoot Issue 2: Errors related to Elasticsearch (ES01) missing during chat
 
