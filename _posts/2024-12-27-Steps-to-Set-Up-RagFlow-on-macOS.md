@@ -67,7 +67,7 @@ elastic_transport.ConnectionError: Connection error caused by: ConnectionError(C
 docker ps
 docker logs -f ragflow-es-01
 ```
-the container is exiting due to insufficient memory (Exit Code 137):
+Identified the container is exiting due to insufficient memory (Exit Code 137):
 Open Docker Desktop Settings:
 - Increase the memory allocation to 16GB (at least 4GB minimum).
 - Restart all RagFlow-related services.
